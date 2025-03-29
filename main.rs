@@ -48,16 +48,26 @@ fn main() {
 
 // 爆速 Yes / No
 
+/// 標準出力に "Yes" を出力します。
 #[inline(always)]
 pub fn y() {
     println!("Yes");
 }
 
+/// 標準出力に "No" を出力します。
 #[inline(always)]
 pub fn n() {
     println!("No");
 }
 
+/// 条件 `condition` が真の場合、"Yes" を出力し、偽の場合 "No" を出力します。
+///
+/// ## Examples
+///
+/// ```
+/// yn(10 > 5); // "Yes" を出力
+/// yn(3 > 5);  // "No" を出力
+/// ```
 #[inline(always)]
 pub fn yn(condition: bool) {
     if condition { y(); } else { n(); }
@@ -65,30 +75,58 @@ pub fn yn(condition: bool) {
 
 // 楽してprint
 
+/// 標準出力に式 `c` の値を文字列として出力します。
+/// 複数の式を渡すと、スペース区切りで出力します。
+///
+/// ## Examples
+///
+/// ```
+/// p!("Hello"); // "Hello" を出力
+/// p!(1, 2, 3); // "1 2 3" を出力
+/// ```
 #[macro_export]
 macro_rules! p {
     ($c:expr) => {
-        println!("{}",$c);
+        println!("{}", $c);
     };
     ($($c:expr),*) => {
-        $(print!("{} ", $c););*
+        $(print!("{} ", $c);)*
         println!();
     };
 }
 
+/// 標準出力に式 `c` の値をデバッグ形式で出力します。
+/// 複数の式を渡すと、スペース区切りで出力します。
+///
+/// ## Examples
+///
+/// ```
+/// pd!(vec![1, 2, 3]); // "[1, 2, 3]" を出力
+/// pd!("world", 42);  // "\"world\" 42" を出力
+/// ```
 #[macro_export]
 macro_rules! pd {
     ($c:expr) => {
-        println!("{:?}",$c);
+        println!("{:?}", $c);
     };
     ($($c:expr),*) => {
-        $(print!("{:?} ", $c););*
+        $(print!("{:?} ", $c);)*
         println!();
     };
 }
 
 // debug時のみ有効なやつ
 
+/// デバッグビルド時のみ、指定されたコード `code` を実行します。
+/// リリースビルドでは無視されます。
+///
+/// ## Examples
+///
+/// ```
+/// debug! {
+///     println!("This is a debug message.");
+/// }
+/// ```
 #[macro_export]
 macro_rules! debug {
     ($($code:tt)*) => {
@@ -99,40 +137,66 @@ macro_rules! debug {
     };
 }
 
+/// デバッグビルド時のみ、式 `c` の値を文字列として出力します。
+/// 複数の式を渡すと、スペース区切りで出力します。
+///
+/// ## Examples
+///
+/// ```
+/// dbgp!("Debug message");
+/// dbgp!(10, "test");
+/// ```
 #[macro_export]
 macro_rules! dbgp {
     ($c:expr) => {
         #[cfg(debug_assertions)]
         {
-            println!("{}",$c);
+            println!("{}", $c);
         }
     };
     ($($c:expr),*) => {
         #[cfg(debug_assertions)]
         {
-            $(print!("{} ", $c););*
+            $(print!("{} ", $c);)*
             println!();
         }
     };
 }
 
+/// デバッグビルド時のみ、式 `c` の値をデバッグ形式で出力します。
+/// 複数の式を渡すと、スペース区切りで出力します。
+///
+/// ## Examples
+///
+/// ```
+/// dbgpd!(vec![1, 2, 3]);
+/// dbgpd!("debug", 123);
+/// ```
 #[macro_export]
 macro_rules! dbgpd {
     ($c:expr) => {
         #[cfg(debug_assertions)]
         {
-            println!("{:?}",$c);
+            println!("{:?}", $c);
         }
     };
     ($($c:expr),*) => {
         #[cfg(debug_assertions)]
         {
-            $(print!("{:?} ", $c););*
+            $(print!("{:?} ", $c);)*
             println!();
         }
     };
 }
 
+/// デバッグビルド時のみ、変数名と値を文字列として出力します。
+///
+/// ## Examples
+///
+/// ```
+/// let x = 10;
+/// dbgpi!(x); // "x: 10" を出力
+/// ```
 #[macro_export]
 macro_rules! dbgpi {
     ($var:ident) => {
@@ -143,6 +207,14 @@ macro_rules! dbgpi {
     };
 }
 
+/// デバッグビルド時のみ、変数名と値をデバッグ形式で出力します。
+///
+/// ## Examples
+///
+/// ```
+/// let vec = vec![1, 2, 3];
+/// dbgpid!(vec); // "vec: [1, 2, 3]" を出力
+/// ```
 #[macro_export]
 macro_rules! dbgpid {
     ($var:ident) => {
