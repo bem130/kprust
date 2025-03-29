@@ -1,0 +1,6 @@
+{
+    "task": {
+        "program": ["main.rs","Cargo.toml",".gitignore"],
+        "submit": "main.rs"
+    }
+}
